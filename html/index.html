@@ -72,10 +72,18 @@
     </div>
   </section>
 
-  <div>
-
-    <button class="btn btn-primary left" data-toggle="modal" data-target="#crearPersonaje">CREAR PERSONAJE</button>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <button class="btn btn-primary left" data-toggle="modal" data-target="#crearPersonaje">CREAR PERSONAJE</button>
+      </div>
+      <div class="col-2">
+        <input type="text" placeholder="Buscar Personaje"  class="form-control" id="buscador" aria-describedby="emailHelp">
+      </div>
+    </div>
   </div>
+
+
 
   <div class="album container py-5 col-12 bg-light" >
     <div class="row" id="contenedorPersonajes"></div>
@@ -144,14 +152,46 @@
         });
 
       }
+      function crearLineaPersonaje(personaje){
+        $("#contenedorPersonajes").append(
+                '<div class="card col-2 shadow-sm">' +
+                '            <img class="bd-placeholder-img card-img-top" width="100%"  src="'+personaje.icon+'" />' +
+                '            <div class="card-body">' +
+                '              <p class="card-text">'+personaje.name+' </p>' +
+                '              <div class="d-flex justify-content-between align-items-center">' +
+                '                <div class="btn-group">' +
+                '                  <button type="button" onclick="deletePersonaje('+personaje.key+')" class="btn delete btn-sm btn-outline-secondary">Delete</button>' +
+                '                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>' +
+                '                </div>' +
+                '              </div>' +
+                '            </div>' +
+                '          </div>');
+      }
+      var personajes = [];
+      var personajesBuscados = [];
       $(document).ready(function () {
+
+
+        $("#buscador").change(function() {
+          console.log($("#buscador").val().toLowerCase());
+          personajesBuscados = personajes.filter(function(personaje){
+              return personaje.id.indexOf($("#buscador").val().toLowerCase()) !== -1;
+          });
+          $("#contenedorPersonajes").html("");
+          personajesBuscados.forEach(function(personaje){
+            crearLineaPersonaje(personaje);
+          });
+
+        });
+
+
         $('#formCrearPersonaje').on('submit', function (event) {
           event.preventDefault();
           $.ajax({
             url: 'http://localhost:3000/personajes',
             type: 'POST',
             data: {
-              id: $("#nombre").val(),
+              id: $("#nombre").val().toLowerCase(),
               name: $("#nombre").val(),
               key: $("#id").val(),
               icon: $("#imagen").val(),
@@ -164,27 +204,14 @@
           });
         });
 
-        $.get( "http://localhost:3000/personajes", function( data ) {
-            data.response.forEach(function(personaje){
-              $("#contenedorPersonajes").append(
-                      '<div class="card col-2 shadow-sm">' +
-                      '            <img class="bd-placeholder-img card-img-top" width="100%"  src="'+personaje.icon+'" />' +
-                      '            <div class="card-body">' +
-                      '              <p class="card-text">'+personaje.name+' </p>' +
-                      '              <div class="d-flex justify-content-between align-items-center">' +
-                      '                <div class="btn-group">' +
-                      '                  <button type="button" onclick="deletePersonaje('+personaje.key+')" class="btn delete btn-sm btn-outline-secondary">Delete</button>' +
-                      '                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>' +
-                      '                </div>' +
-                      '              </div>' +
-                      '            </div>' +
-                      '          </div>')
-            });
+      $.get( "http://localhost:3000/personajes", function( data ) {
+          personajes = data.response;
 
-            })
-
+          data.response.forEach(function(personaje){
+              crearLineaPersonaje(personaje);
+          })
       })
-
+    });
 
     </script>
 
