@@ -5485,6 +5485,18 @@ router.get('/', function(req, res, next) {
   });
 });
 
+
+router.get('/:id', function(req, res, next) {
+
+  personaje = personajes.find(function(personaje){
+    return personaje.key == req.params.id
+  });
+  res.send({
+    status : true,
+    response : personaje
+  });
+});
+
 router.post('/', function(req, res, next) {
 
   personajes.push(req.body);
@@ -5493,6 +5505,33 @@ router.post('/', function(req, res, next) {
     status : true,
     response : personajes
   });
+});
+
+router.put('/:id', function(req, res, next) {
+
+  personaje = personajes.find(function(personaje){
+    return personaje.key == req.params.id
+  });
+
+  personaje.id = req.body.id;
+  personaje.name = req.body.name;
+  personaje.icon = req.body.icon;
+  personaje.description = req.body.description;
+  
+
+  let posicion = 0;
+  personajes.forEach(function(item , i){
+      if(item.key == personaje.key){
+        posicion = i;
+      }
+  });
+  personajes[posicion] = personaje;
+
+  res.send({
+    status : true,
+    response : personajes
+  });
+
 });
 
 router.delete('/:id', function(req, res, next) {

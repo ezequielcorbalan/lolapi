@@ -131,6 +131,40 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade" id="editarPersonaje" tabindex="-1" role="dialog" aria-labelledby="editarPersonajeLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Editar Personaje</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="formEditarPersonaje" >
+              <input type="hidden" class="form-control" id="idEdit" aria-describedby="emailHelp">
+              <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" class="form-control" id="nombreEdit" aria-describedby="emailHelp">
+                <small id="emailHelp" class="form-text text-muted">Nombre del personaje</small>
+              </div>
+              <div class="form-group">
+                <label for="nombre">Descripcion</label>
+                <input type="text" class="form-control" id="descripcionEdit" aria-describedby="emailHelp">
+                <small id="emailHelp" class="form-text text-muted">Descripcion del personaje</small>
+              </div>
+              <div class="form-group">
+                <label for="imagen">imagen</label>
+                <input type="text" class="form-control" id="imagenEdit">
+              </div>
+              <button type="submit"  class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js" ></script>
 
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -139,6 +173,25 @@
 
 
     <script>
+
+    function editarPersonaje(key) {
+      $.ajax({
+        url: 'http://localhost:3000/personajes/'+key,
+        type: 'GET',
+        success: function(result) {
+              if(result.response.key){
+                $("#idEdit").val(key);
+                $("#nombreEdit").val(result.response.name);
+                $("#descripcionEdit").val(result.response.description);
+                $("#imagenEdit").val(result.response.icon);
+                $("#editarPersonaje").modal("show");
+              }else{
+                alert("No Cargo nada");
+              }
+        }
+      });
+
+    }
 
 
       function deletePersonaje(key) {
@@ -161,7 +214,7 @@
                 '              <div class="d-flex justify-content-between align-items-center">' +
                 '                <div class="btn-group">' +
                 '                  <button type="button" onclick="deletePersonaje('+personaje.key+')" class="btn delete btn-sm btn-outline-secondary">Delete</button>' +
-                '                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>' +
+                '                  <button type="button" onclick="editarPersonaje('+personaje.key+')" class="btn btn-sm btn-outline-secondary">Edit</button>' +
                 '                </div>' +
                 '              </div>' +
                 '            </div>' +
@@ -184,6 +237,26 @@
 
         });
 
+
+        $('#formEditarPersonaje').on('submit', function (event) {
+          event.preventDefault();
+          id = $("#idEdit").val();
+          $.ajax({
+            url: 'http://localhost:3000/personajes/'+id,
+            type: 'PUT',
+            data: {
+              id: $("#nombreEdit").val().toLowerCase(),
+              name: $("#nombreEdit").val(),
+              icon: $("#imagenEdit").val(),
+              description: $("#descripcionEdit").val(),
+            },
+            success: function(result) {
+              $("#editarPersonaje").modal("hide");
+              alert("Se modifico el personaje")
+              location.reload();
+            }
+          });
+        });
 
         $('#formCrearPersonaje').on('submit', function (event) {
           event.preventDefault();
