@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-
+const db = require("../models");
+const Personajes = db.personajes;
 
 var personajes =[
   {
@@ -8,6 +9,7 @@ var personajes =[
     "key": "266",
     "name": "Aatrox",
     "title": "the Darkin Blade",
+    "url" : "https://www.google.com",
     "tags": [
       "Fighter",
       "Tank"
@@ -5478,10 +5480,11 @@ var personajes =[
 
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+router.get('/',async function(req, res, next) {
+  let resultados = await Personajes.findAll();
   res.send({
     status : true,
-    response : personajes
+    response : resultados
   });
 });
 
@@ -5495,6 +5498,7 @@ router.get('/:id', function(req, res, next) {
     status : true,
     response : personaje
   });
+  
 });
 
 router.post('/', function(req, res, next) {

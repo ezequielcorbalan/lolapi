@@ -205,15 +205,20 @@
         });
 
       }
-      function crearLineaPersonaje(personaje){
+
+
+    function crearLineaPersonaje(personaje){
+        let url =  personaje.url? personaje.url : "";
         $("#contenedorPersonajes").append(
                 '<div class="card col-2 shadow-sm">' +
                 '            <img class="bd-placeholder-img card-img-top" width="100%"  src="'+personaje.icon+'" />' +
                 '            <div class="card-body">' +
-                '              <p class="card-text">'+personaje.name+' </p>' +
+                '              <p class="card-text">  ' +
+                '                 <a href="'+url+'" target="_blank" >'+personaje.name+'</a> ' +
+                '              </p>' +
                 '              <div class="d-flex justify-content-between align-items-center">' +
                 '                <div class="btn-group">' +
-                '                  <button type="button" onclick="deletePersonaje('+personaje.key+')" class="btn delete btn-sm btn-outline-secondary">Delete</button>' +
+                '                  <button type="button" onclick="deletePersonaje('+personaje.key+')"  class="btn delete btn-sm btn-outline-secondary">Delete</button>' +
                 '                  <button type="button" onclick="editarPersonaje('+personaje.key+')" class="btn btn-sm btn-outline-secondary">Edit</button>' +
                 '                </div>' +
                 '              </div>' +
@@ -223,7 +228,6 @@
       var personajes = [];
       var personajesBuscados = [];
       $(document).ready(function () {
-
 
         $("#buscador").change(function() {
           console.log($("#buscador").val().toLowerCase());
@@ -260,6 +264,8 @@
 
         $('#formCrearPersonaje').on('submit', function (event) {
           event.preventDefault();
+
+
           $.ajax({
             url: 'http://localhost:3000/personajes',
             type: 'POST',
