@@ -121,10 +121,6 @@
                 <label for="imagen">imagen</label>
                 <input type="text" class="form-control" id="imagen">
               </div>
-              <div class="form-group">
-                <label for="id">ID</label>
-                <input type="text" class="form-control" id="id">
-              </div>
               <button type="submit"  class="btn btn-primary">Submit</button>
             </form>
           </div>
@@ -148,11 +144,6 @@
                 <label for="nombre">Nombre</label>
                 <input type="text" class="form-control" id="nombreEdit" aria-describedby="emailHelp">
                 <small id="emailHelp" class="form-text text-muted">Nombre del personaje</small>
-              </div>
-              <div class="form-group">
-                <label for="nombre">Descripcion</label>
-                <input type="text" class="form-control" id="descripcionEdit" aria-describedby="emailHelp">
-                <small id="emailHelp" class="form-text text-muted">Descripcion del personaje</small>
               </div>
               <div class="form-group">
                 <label for="imagen">imagen</label>
@@ -179,10 +170,9 @@
         url: 'http://localhost:3000/personajes/'+key,
         type: 'GET',
         success: function(result) {
-              if(result.response.key){
-                $("#idEdit").val(key);
+              if(result.response.id){
+                $("#idEdit").val(result.response.id);
                 $("#nombreEdit").val(result.response.name);
-                $("#descripcionEdit").val(result.response.description);
                 $("#imagenEdit").val(result.response.icon);
                 $("#editarPersonaje").modal("show");
               }else{
@@ -206,20 +196,27 @@
 
       }
 
-
+    function parsePoderes(poderes){
+      let htmlPoderes="";
+      poderes.forEach(function(poder){
+        htmlPoderes += '<div class="col"><img data-toggle="tooltip" data-placement="top" title="'+poder.name+'" class="img-fluid float-left"  src="'+poder.icon+'" /></div>'
+      });
+      return htmlPoderes;
+    }
     function crearLineaPersonaje(personaje){
         let url =  personaje.url? personaje.url : "";
         $("#contenedorPersonajes").append(
                 '<div class="card col-2 shadow-sm">' +
                 '            <img class="bd-placeholder-img card-img-top" width="100%"  src="'+personaje.icon+'" />' +
                 '            <div class="card-body">' +
+                '             <div class="poderes container" ><div class="row">'+parsePoderes(personaje.poderes)+'</div></div>'+
                 '              <p class="card-text">  ' +
                 '                 <a href="'+url+'" target="_blank" >'+personaje.name+'</a> ' +
                 '              </p>' +
                 '              <div class="d-flex justify-content-between align-items-center">' +
                 '                <div class="btn-group">' +
-                '                  <button type="button" onclick="deletePersonaje('+personaje.key+')"  class="btn delete btn-sm btn-outline-secondary">Delete</button>' +
-                '                  <button type="button" onclick="editarPersonaje('+personaje.key+')" class="btn btn-sm btn-outline-secondary">Edit</button>' +
+                '                  <button type="button" onclick="deletePersonaje('+personaje.id+')"  class="btn delete btn-sm btn-outline-secondary">Delete</button>' +
+                '                  <button type="button" onclick="editarPersonaje('+personaje.id+')" class="btn btn-sm btn-outline-secondary">Edit</button>' +
                 '                </div>' +
                 '              </div>' +
                 '            </div>' +
@@ -251,8 +248,7 @@
             data: {
               id: $("#nombreEdit").val().toLowerCase(),
               name: $("#nombreEdit").val(),
-              icon: $("#imagenEdit").val(),
-              description: $("#descripcionEdit").val(),
+              icon: $("#imagenEdit").val()
             },
             success: function(result) {
               $("#editarPersonaje").modal("hide");
@@ -270,9 +266,7 @@
             url: 'http://localhost:3000/personajes',
             type: 'POST',
             data: {
-              id: $("#nombre").val().toLowerCase(),
               name: $("#nombre").val(),
-              key: $("#id").val(),
               icon: $("#imagen").val(),
             },
             success: function(result) {

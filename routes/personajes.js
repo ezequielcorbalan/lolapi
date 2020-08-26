@@ -5477,11 +5477,14 @@ var personajes =[
   }
 ]
 
-
-
 /* GET users listing. */
 router.get('/',async function(req, res, next) {
-  let resultados = await Personajes.findAll();
+  let resultados = await Personajes.findAll({
+    include: {
+      model: db.poderes
+    }
+
+  });
   res.send({
     status : true,
     response : resultados
@@ -5489,61 +5492,67 @@ router.get('/',async function(req, res, next) {
 });
 
 
-router.get('/:id', function(req, res, next) {
+router.get('/:id',async function(req, res, next) {
 
-  personaje = personajes.find(function(personaje){
-    return personaje.key == req.params.id
+  let personajeEncontrado = await Personajes.findOne({
+    where : {
+      id : req.params.id
+    }
   });
   res.send({
     status : true,
-    response : personaje
+    response : personajeEncontrado
   });
   
 });
 
-router.post('/', function(req, res, next) {
+router.post('/',async function(req, res, next) {
 
-  personajes.push(req.body);
+  let personajeCreado = await Personajes.create(req.body);
+  let resultados = await Personajes.findAll();
+  res.send({
+    status : true,
+    response : resultados
+  });
+});
 
+router.put('/:id',async function(req, res, next) {
+
+  let personajeEncontrado = await Personajes.findOne({
+    where : {
+      id : req.params.id
+    }
+  });
+  if(!personajeEncontrado){
+    res.send({
+      status : false,
+      response : {error : "NO SE ENCONTRO EL PERSONAJE"}
+    });
+    return;
+  }
+
+  personajeEncontrado.name = req.body.name;
+  personajeEncontrado.icon = req.body.icon;
+
+  await personajeEncontrado.save();
+  let personajes = await Personajes.findAll();
   res.send({
     status : true,
     response : personajes
   });
-});
-
-router.put('/:id', function(req, res, next) {
-
-  personaje = personajes.find(function(personaje){
-    return personaje.key == req.params.id
-  });
-
-  personaje.id = req.body.id;
-  personaje.name = req.body.name;
-  personaje.icon = req.body.icon;
-  personaje.description = req.body.description;
-  
-
-  let posicion = 0;
-  personajes.forEach(function(item , i){
-      if(item.key == personaje.key){
-        posicion = i;
-      }
-  });
-  personajes[posicion] = personaje;
-
-  res.send({
-    status : true,
-    response : personajes
-  });
 
 });
 
-router.delete('/:id', function(req, res, next) {
-
-  personajes = personajes.filter(function(personaje){
-    return personaje.key != req.params.id
+router.delete('/:id',async function(req, res, next) {
+  let personajeEncontrado = await Personajes.findOne({
+    where : {
+      id : req.params.id
+    }
   });
-
+  if(personajeEncontrado){
+    await personajeEncontrado.destroy();
+  }
+  let personajes = await Personajes.findAll();
   res.send({
     status : true,
     response : personajes
