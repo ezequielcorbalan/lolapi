@@ -5497,6 +5497,9 @@ router.get('/:id',async function(req, res, next) {
   let personajeEncontrado = await Personajes.findOne({
     where : {
       id : req.params.id
+    },
+    include: {
+      model: db.poderes
     }
   });
   res.send({

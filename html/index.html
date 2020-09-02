@@ -204,7 +204,7 @@
       return htmlPoderes;
     }
     function crearLineaPersonaje(personaje){
-        let url =  personaje.url? personaje.url : "";
+        let url =  "personaje.html?personaje="+personaje.id;
         $("#contenedorPersonajes").append(
                 '<div class="card col-2 shadow-sm">' +
                 '            <img class="bd-placeholder-img card-img-top" width="100%"  src="'+personaje.icon+'" />' +
