@@ -11,6 +11,9 @@ module.exports = (sequelize, Sequelize) => {
         },
         icon: {
             type: Sequelize.STRING
+        },
+        description: {
+            type : Sequelize.STRING
         }
     });
     return personajes;

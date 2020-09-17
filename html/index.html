@@ -121,6 +121,33 @@
                 <label for="imagen">imagen</label>
                 <input type="text" class="form-control" id="imagen">
               </div>
+              <div class="poderes">
+                <h3>Poderes</h3>
+                <div class="form-group">
+                  <label for="Q">Q</label>
+                  <input type="text" placeholder="nombre poder" class="form-control" id="crearNombrePoder1">
+                  <input type="text" placeholder="300" class="form-control" id="crearDanoPoder1">
+                  <input type="text" placeholder="url poder" class="form-control" id="crearIconPoder1">
+                </div>
+                <div class="form-group">
+                  <label for="W">W</label>
+                  <input type="text" placeholder="nombre poder" class="form-control" id="crearNombrePoder2">
+                  <input type="text" placeholder="300" class="form-control" id="crearDanoPoder2">
+                  <input type="text" placeholder="url poder" class="form-control" id="crearIconPoder2">
+                </div>
+                <div class="form-group">
+                  <label for="poder E">E</label>
+                  <input type="text" placeholder="nombre poder" class="form-control" id="crearNombrePoder3">
+                  <input type="text" placeholder="300" class="form-control" id="crearDanoPoder3">
+                  <input type="text" placeholder="url poder" class="form-control" id="crearIconPoder3">
+                </div>
+                <div class="form-group">
+                  <label for="ulti">R</label>
+                  <input type="text" placeholder="nombre poder" class="form-control" id="crearNombrePoder4">
+                  <input type="text" placeholder="300" class="form-control" id="crearDanoPoder4">
+                  <input type="text" placeholder="url poder" class="form-control" id="crearIconPoder4">
+                </div>
+              </div>
               <button type="submit"  class="btn btn-primary">Submit</button>
             </form>
           </div>
@@ -149,6 +176,35 @@
                 <label for="imagen">imagen</label>
                 <input type="text" class="form-control" id="imagenEdit">
               </div>
+
+
+              <div class="poderes">
+                <h3>Poderes</h3>
+                <div class="form-group">
+                  <label for="Q">Q</label>
+                  <input type="text" placeholder="nombre poder" class="form-control" id="nombrePoder1">
+                  <input type="text" placeholder="300" class="form-control" id="danoPoder1">
+                  <input type="text" placeholder="url poder" class="form-control" id="iconPoder1">
+                </div>
+                <div class="form-group">
+                  <label for="W">W</label>
+                  <input type="text" placeholder="nombre poder" class="form-control" id="nombrePoder2">
+                  <input type="text" placeholder="300" class="form-control" id="danoPoder2">
+                  <input type="text" placeholder="url poder" class="form-control" id="iconPoder2">
+                </div>
+                <div class="form-group">
+                  <label for="poder E">E</label>
+                  <input type="text" placeholder="nombre poder" class="form-control" id="nombrePoder3">
+                  <input type="text" placeholder="300" class="form-control" id="danoPoder3">
+                  <input type="text" placeholder="url poder" class="form-control" id="iconPoder3">
+                </div>
+                <div class="form-group">
+                  <label for="ulti">R</label>
+                  <input type="text" placeholder="nombre poder" class="form-control" id="nombrePoder4">
+                  <input type="text" placeholder="300" class="form-control" id="danoPoder4">
+                  <input type="text" placeholder="url poder" class="form-control" id="iconPoder4">
+                </div>
+              </div>
               <button type="submit"  class="btn btn-primary">Submit</button>
             </form>
           </div>
@@ -174,6 +230,23 @@
                 $("#idEdit").val(result.response.id);
                 $("#nombreEdit").val(result.response.name);
                 $("#imagenEdit").val(result.response.icon);
+
+                $("#nombrePoder1").val(result.response.poderes[0].name);
+                $("#danoPoder1").val(result.response.poderes[0].damage);
+                $("#iconPoder1").val(result.response.poderes[0].icon);
+
+                $("#nombrePoder2").val(result.response.poderes[1].name);
+                $("#danoPoder2").val(result.response.poderes[1].damage);
+                $("#iconPoder2").val(result.response.poderes[1].icon);
+
+                $("#nombrePoder3").val(result.response.poderes[2].name);
+                $("#danoPoder3").val(result.response.poderes[2].damage);
+                $("#iconPoder3").val(result.response.poderes[2].icon);
+
+                $("#nombrePoder4").val(result.response.poderes[3].name);
+                $("#danoPoder4").val(result.response.poderes[3].damage);
+                $("#iconPoder4").val(result.response.poderes[3].icon);
+
                 $("#editarPersonaje").modal("show");
               }else{
                 alert("No Cargo nada");
@@ -242,14 +315,43 @@
         $('#formEditarPersonaje').on('submit', function (event) {
           event.preventDefault();
           id = $("#idEdit").val();
+
+
+          var personaje = {
+            id: $("#nombreEdit").val().toLowerCase(),
+            name: $("#nombreEdit").val(),
+            icon: $("#imagenEdit").val(),
+            poderes : [
+              {
+                name : $("#nombrePoder1").val(),
+                damage :  $("#danoPoder1").val(),
+                icon : $("#iconPoder1").val()
+              },
+              {
+                name : $("#nombrePoder2").val(),
+                damage :  $("#danoPoder2").val(),
+                icon : $("#iconPoder2").val()
+              },
+              {
+                name : $("#nombrePoder3").val(),
+                damage :  $("#danoPoder3").val(),
+                icon : $("#iconPoder3").val()
+              },
+              {
+                name : $("#nombrePoder4").val(),
+                damage :  $("#danoPoder4").val(),
+                icon : $("#iconPoder4").val()
+              }
+            ]
+          };
+
+
           $.ajax({
             url: 'http://localhost:3000/personajes/'+id,
             type: 'PUT',
-            data: {
-              id: $("#nombreEdit").val().toLowerCase(),
-              name: $("#nombreEdit").val(),
-              icon: $("#imagenEdit").val()
-            },
+            data: JSON.stringify(personaje),
+            dataType: "json",
+            contentType: "application/json",
             success: function(result) {
               $("#editarPersonaje").modal("hide");
               alert("Se modifico el personaje")
@@ -260,15 +362,38 @@
 
         $('#formCrearPersonaje').on('submit', function (event) {
           event.preventDefault();
-
-
+          let personajeAMandar = {
+            name: $("#nombre").val(),
+            icon: $("#imagen").val(),
+            poderes : [
+              {
+                name : $("#crearNombrePoder1").val(),
+                damage :  $("#crearDanoPoder1").val(),
+                icon : $("#crearIconPoder1").val()
+              },
+              {
+                name : $("#crearNombrePoder2").val(),
+                damage :  $("#crearDanoPoder2").val(),
+                icon : $("#crearIconPoder2").val()
+              },
+              {
+                name : $("#crearNombrePoder3").val(),
+                damage :  $("#crearDanoPoder3").val(),
+                icon : $("#crearIconPoder3").val()
+              },
+              {
+                name : $("#crearNombrePoder4").val(),
+                damage :  $("#crearDanoPoder4").val(),
+                icon : $("#crearIconPoder4").val()
+              }
+            ]
+          };
           $.ajax({
             url: 'http://localhost:3000/personajes',
             type: 'POST',
-            data: {
-              name: $("#nombre").val(),
-              icon: $("#imagen").val(),
-            },
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(personajeAMandar),
             success: function(result) {
               $("#crearPersonaje").modal("hide");
               alert("Se creo el personaje")
