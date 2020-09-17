@@ -1,3 +1,16 @@
+create table lol.poderes
+(
+    id           int auto_increment
+        primary key,
+    name         varchar(30) null,
+    damage       double      null,
+    id_personaje int         null,
+    createdAt    datetime    null,
+    updatedAt    datetime    null,
+    icon         text        null
+);
+
+
 INSERT INTO lol.poderes (id, name, damage, id_personaje, createdAt, updatedAt, icon) VALUES (1, 'la espada loca', 300, 1, null, '2020-09-09 15:40:49', 'https://opgg-static.akamaized.net/images/lol/spell/AatroxQ.png');
 INSERT INTO lol.poderes (id, name, damage, id_personaje, createdAt, updatedAt, icon) VALUES (2, 'cadenas del mundo', 500, 1, null, '2020-09-09 15:40:49', 'https://opgg-static.akamaized.net/images/lol/spell/AatroxW.png');
 INSERT INTO lol.poderes (id, name, damage, id_personaje, createdAt, updatedAt, icon) VALUES (3, 'deslizamiento sombrio', 50, 1, null, '2020-09-09 15:40:49', 'https://opgg-static.akamaized.net/images/lol/spell/AatroxE.png');
