@@ -4,4 +4,5 @@ module.exports = {
   PASSWORD: "",
   DB: "lol",
   dialect: "mysql",
+  key : "?WwJq}n+LAt7~;wh"
 };

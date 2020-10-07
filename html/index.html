@@ -225,6 +225,9 @@
       $.ajax({
         url: 'http://localhost:3000/personajes/'+key,
         type: 'GET',
+        headers : {
+          Authorization : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiSnVhbkVsTWFzQ2FwbyIsIm5vbWJyZSI6Imp1YW4iLCJpYXQiOjE2MDIwODQ5NzR9.G_IQ1nwX7Rmb6mYEqYm5qOCnXa7HffKWc62lBqNSS4c"
+        },
         success: function(result) {
               if(result.response.id){
                 $("#idEdit").val(result.response.id);
@@ -262,6 +265,9 @@
         $.ajax({
           url: 'http://localhost:3000/personajes/'+key,
           type: 'DELETE',
+          headers: {
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiSnVhbkVsTWFzQ2FwbyIsIm5vbWJyZSI6Imp1YW4iLCJpYXQiOjE2MDIwODQ5NzR9.G_IQ1nwX7Rmb6mYEqYm5qOCnXa7HffKWc62lBqNSS4c"
+          },
           success: function(result) {
             location.reload();
           }
@@ -298,6 +304,7 @@
       var personajes = [];
       var personajesBuscados = [];
       $(document).ready(function () {
+
 
         $("#buscador").change(function() {
           console.log($("#buscador").val().toLowerCase());
@@ -402,13 +409,18 @@
           });
         });
 
-      $.get( "http://localhost:3000/personajes", function( data ) {
-          personajes = data.response;
-
-          data.response.forEach(function(personaje){
+        $.ajax({
+          url: 'http://localhost:3000/personajes',
+          type: 'GET',
+          dataType: "json",
+          contentType: "application/json",
+          success: function(result) {
+            result.response.forEach(function(personaje){
               crearLineaPersonaje(personaje);
-          })
-      })
+            })
+          }
+        });
+
     });
 
     </script>
